@@ -1,6 +1,7 @@
 require('dotenv').config();
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import { deviceRouter } from './src/routes/device.routes';
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.get('/', (req: Request, res: Response) => {
     }
   )
 });
+
+app.use('/devices', deviceRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
