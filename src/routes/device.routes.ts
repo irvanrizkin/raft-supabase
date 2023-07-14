@@ -8,3 +8,5 @@ export const deviceRouter = Router();
 deviceRouter.get('/', deviceController.list);
 
 deviceRouter.post('/', deviceController.add);
+
+deviceRouter.delete('/:id', deviceController.remove);

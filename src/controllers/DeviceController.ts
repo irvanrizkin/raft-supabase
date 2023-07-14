@@ -38,4 +38,21 @@ export class DeviceController extends Controller {
       next(error);
     }
   }
+
+  remove = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    try {
+      const { error } = await this.supabase.from('devices')
+        .delete()
+        .eq('id', id);
+
+      return res.status(204).json({
+        status: true,
+        message: 'device removed successfully',
+      })
+    } catch (error) {
+      next(error);
+    }
+  }
 }
