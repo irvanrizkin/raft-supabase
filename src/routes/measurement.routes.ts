@@ -6,3 +6,5 @@ const measurementController = new MeasurementController();
 export const measurementRouter = Router();
 
 measurementRouter.post('/', measurementController.add);
+
+measurementRouter.get('/:id', measurementController.listByPeriod);
