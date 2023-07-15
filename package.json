@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "dev": "ts-node index.ts"
+    "dev": "ts-node index.ts",
+    "build": "tsc",
+    "start:prod": "node build/index.js"
   },
   "author": "Irvan Rizki Nugraha <irvanriskinugraha90@gmail.com>",
   "license": "MIT",
