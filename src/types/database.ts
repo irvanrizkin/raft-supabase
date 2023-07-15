@@ -85,6 +85,19 @@ export interface Database {
           temperature: number | null
         }[]
       }
+      get_weekly_sample: {
+        Args: {
+          p_deviceid: string
+        }
+        Returns: {
+          createdAt: string | null
+          deviceId: string | null
+          id: number
+          ppm: number | null
+          source: string | null
+          temperature: number | null
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
