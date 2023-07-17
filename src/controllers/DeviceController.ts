@@ -3,7 +3,7 @@ import { Controller } from "./Controller";
 import { MqttSingleton } from "../services/MqttSingleton";
 
 export class DeviceController extends Controller {
-  mqttSingleton: MqttSingleton;
+  private mqttSingleton: MqttSingleton;
   constructor() {
     super()
     this.mqttSingleton = MqttSingleton.getInstance();
