@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "./Controller";
+import { MqttSingleton } from "../services/MqttSingleton";
 
 export class DeviceController extends Controller {
+  mqttSingleton: MqttSingleton;
   constructor() {
     super()
+    this.mqttSingleton = MqttSingleton.getInstance();
   }
 
   list = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,6 +32,8 @@ export class DeviceController extends Controller {
       const { data, error } = await this.supabase.from('devices')
         .insert({ id, name, url, token });
 
+      this.mqttSingleton.subscribeAll();
+
       return res.status(201).json({
         status: true,
         message: 'device added successfully',
@@ -46,6 +51,8 @@ export class DeviceController extends Controller {
       const { error } = await this.supabase.from('devices')
         .delete()
         .eq('id', id);
+
+      this.mqttSingleton.subscribeAll();
 
       return res.status(204).json({
         status: true,
