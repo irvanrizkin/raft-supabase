@@ -5,6 +5,7 @@ import { deviceRouter } from './src/routes/device.routes';
 import { measurementRouter } from './src/routes/measurement.routes';
 import { actionRouter } from './src/routes/action.routes';
 import { MqttSingleton } from './src/services/MqttSingleton';
+import { ErrorHandler } from './src/utils/ErrorHandler';
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/devices', deviceRouter);
 app.use('/measurements', measurementRouter);
 app.use('/actions', actionRouter);
+
+app.use(ErrorHandler.handleError)
 
 const PORT = process.env.PORT || 5000;
 const MODE = process.env.MODE;

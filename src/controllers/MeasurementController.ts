@@ -13,8 +13,10 @@ export class MeasurementController extends Controller {
     const { ppm, temperature, source, deviceId } = req.body;
 
     try {
-      const { data, error } = await this.supabase.from('measurements')
+      const { data, error, status } = await this.supabase.from('measurements')
         .insert({ ppm, temperature, source, deviceId });
+
+      if (error) return this.throwCustomError(error.message, status); 
 
       return res.status(201).json({
         status: true,
@@ -38,26 +40,28 @@ export class MeasurementController extends Controller {
       }
       if (period) {
         if (!PERIOD_OPTIONS[period.toString()]) {
-          throw new Error('invalid time value');
+          return this.throwCustomError('invalid time value', 400);
         }
 
-        const { data, error } = await this.listAverageByPeriod(
+        const { data, error, status } = await this.listAverageByPeriod(
           id,
           PERIOD_OPTIONS[period.toString()],
           source.toString()
         );
 
+        if (error) return this.throwCustomError(error.message, status); 
+
         const periodMessage = period === '1d' ? 'daily' : 'weekly'
         return res.status(200).json({
           status: true,
-          message: `measurement sampled ${periodMessage} listed successfully
-          
-          `,
+          message: `measurement sampled ${periodMessage} listed successfully`,
           results: data,
         })
       }
 
-      const { data, error } = await this.listLatest30Min(id, source.toString());
+      const { data, error, status } = await this.listLatest30Min(id, source.toString());
+
+      if (error) return this.throwCustomError(error.message, status); 
 
       return res.status(200).json({
         status: true,

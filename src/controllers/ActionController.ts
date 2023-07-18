@@ -20,7 +20,7 @@ export class ActionController extends Controller {
         .limit(1)
         .single();
 
-      if (!data) throw new Error('not found');
+      if (!data) return this.throwCustomError('device not found for action', 404);
 
       if (process.env.MODE === 'thinger') {
         await this.sendByThinger(data.url ?? '', data.token ?? '', flow);
@@ -51,7 +51,7 @@ export class ActionController extends Controller {
 
   private sendByThinger = async (url: string, token: string, flow: string) => {
     if (url === '' || token === '') {
-      throw new Error('not providing url or token for thinger');
+      return this.throwCustomError('url and token was null in device', 400);
     }
 
     await axios.post(`${url}/valve`, flow, {

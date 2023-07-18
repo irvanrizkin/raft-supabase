@@ -11,9 +11,11 @@ export class DeviceController extends Controller {
 
   list = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { data, error } = await this.supabase.from('devices')
+      const { data, error, status } = await this.supabase.from('devices')
         .select()
         .order('name');
+
+      if (error) return this.throwCustomError(error.message, status);
 
       return res.status(200).json({
         status: true,
@@ -29,8 +31,10 @@ export class DeviceController extends Controller {
     const { id, name, url, token } = req.body;
 
     try {
-      const { data, error } = await this.supabase.from('devices')
+      const { data, error, status } = await this.supabase.from('devices')
         .insert({ id, name, url, token });
+
+      if (error) return this.throwCustomError(error.message, status);
 
       this.mqttSingleton.subscribeAll();
 
@@ -48,9 +52,19 @@ export class DeviceController extends Controller {
     const { id } = req.params;
 
     try {
-      const { error } = await this.supabase.from('devices')
+      const { data } = await this.supabase.from('devices')
+        .select()
+        .eq('id', id)
+        .limit(1)
+        .single();
+
+      if (!data) throw this.throwCustomError('device not found for deletion', 404);
+
+      const { error, status } = await this.supabase.from('devices')
         .delete()
         .eq('id', id);
+
+      if (error) return this.throwCustomError(error.message, status);
 
       this.mqttSingleton.subscribeAll();
 
